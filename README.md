@@ -114,3 +114,9 @@ app.post('/api/events', (req, res) => {
     res.status(200).send({ message: 'Event added!' });
 });
 ```
+
+### Misc
+
+If you want to learn more about Hiro's Ordinals tooling:
+- Join the [Stacks Discord server](https://discord.com/invite/pPwMzMx9k8)
+- Follow, @, or DM us on Twitter at [@hirosystems](https://twitter.com/hirosystems)
