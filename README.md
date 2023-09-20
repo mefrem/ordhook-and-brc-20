@@ -11,12 +11,12 @@ cd ordhook
 cargo ordhook-install
 ```
 
-2. [Optional] Visit the Hiro archive and download the bitcoin index `rocksdb` that ordhook builds. (Note: rocksdb is a pared down version of the bitcoin chain state that enables ordhook to compute an inscription's ordinal number, which is the ordinal number of each satoshi minted on Bitcoin)
-- Go to Hiro's archive for ordhook's indexes and files: https://archive.hiro.so/mainnet/ordhook/
-- Ctrl-f find "mainnet-ordhook-latest.tar.gz" (59.2 GB as of Sep 20, 2023)
-- Download and unzip contents, and drag to ordhook folder within project (`./ordhook/` is the default place for it)
+2. *Optional:* Visit the [Hiro Archive](https://www.hiro.so/blog/sync-your-stacks-node-and-api-services-faster-with-the-hiro-archive) and download the bitcoin index `rocksdb` that ordhook builds. (Note: rocksdb is a pared down version of the bitcoin chain state that enables ordhook to compute an inscription's ordinal number, which is the ordinal number of each satoshi minted on Bitcoin)
+    - Go to Hiro's archive for ordhook's indexes and files: https://archive.hiro.so/mainnet/ordhook/
+    - Ctrl-f find "mainnet-ordhook-latest.tar.gz" (59.2 GB as of Sep 20, 2023)
+    - Download and unzip contents, and drag to ordhook folder within project (`./ordhook/` is the default place for it)
 
-## Using Ordhook
+## Using Ordhook to deliver payloads to an observer
 
 1. Try out ordhook commands `scan` and `service` which allow for historical and ongoing observation, respectively. In terminal:
 
@@ -25,11 +25,13 @@ ordhook scan blocks 784726 784727 --mainnet
 ```
 
 This commands returns these results (which happen to be the first two inscriptions ever made):
-> Inscription 6fb976ab49dcec017f1e201e84395983204ae1a7c2abf7ced0a85d692e442799i0 revealed at block #767430 (ordinal_number 1252201400444387, inscription_number 0)
-> Inscription 26482871f33f1051f450f2da9af275794c0b5f1c61ebf35e4467fb42c2813403i0 revealed at block #767753 (ordinal_number 727624168684699, inscription_number 1) 
+```bash
+Inscription 6fb976ab49dcec017f1e201e84395983204ae1a7c2abf7ced0a85d692e442799i0 revealed at block #767430 (ordinal_number 1252201400444387, inscription_number 0)
+Inscription 26482871f33f1051f450f2da9af275794c0b5f1c61ebf35e4467fb42c2813403i0 revealed at block #767753 (ordinal_number 727624168684699, inscription_number 1) 
+```
+2. In this repo is a simple web server in the `/my_ordinal_app/` folder's [`server.js`](/my_ordinal_app/server.js) script. After running `npm install` inside that folder to download project dependencies, you can start the server with `node server.js`
 
-
-2. You can also deliver ordhook `scan` and `service` payloads to an API endpoint. This repo's `my_ordinal_app` project has a Node.js script that is setup to receive ordhook payloads at `http://localhost:3000/api/events`
+3. You can now deliver ordhook `scan` and `service` payloads to the port exposes by our local web server. The `my_ordinal_app` Node.js script is setup to receive payloads at `http://localhost:3000/api/events`
 
 
 Here we will scan historical blocks and post inscription data to the URL specified (here, a local web server):
@@ -43,9 +45,9 @@ Additionally, ordhook supports ongoing observation of the bitcoin chain for insc
 ordhook service start --post-to=http://localhost:3000/api/events --config-path=./Ordhook.toml
 ```
 
-## Creating custom views of Ordinals data with Ordhook
+## Creating custom views of ordhook Ordinals data with JavaScript
 
-You can extract custom, finely tailored views of ordinals inscription data by working with  ordhook payloads. If you look at the [./my_ordinal_app/server.js] script, you can see three, increasingly narrowly tailored, views of inscription data that ordhook delivers. 
+You can extract custom, finely tailored views of ordinals inscription data by working with  ordhook payloads. If you look at the [`server.js`](/my_ordinal_app/server.js) script, you can see three, increasingly narrowly tailored, views of inscription data that ordhook delivers. 
 
 Here we are simply displaying the results in the browser, but you could just as easily populate a database, or trigger another service.
 
